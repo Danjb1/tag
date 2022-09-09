@@ -1,0 +1,9 @@
+# Visual Studio preferences
+/.vs/
+*.vcxproj.user
+
+# Build output
+/x64/
+
+# Libraries
+/libs/
