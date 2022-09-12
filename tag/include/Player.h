@@ -57,7 +57,7 @@ private:
     static constexpr float maxSpeed = 12.5f;
     static constexpr float timeTilMaxSpeed = 7.f;
     static constexpr float acceleration = (maxSpeed - baseSpeed) / timeTilMaxSpeed;
-    static constexpr float maxTime = 30.f;
+    static constexpr float maxTime = 40.f;
 
     int playerId;
     World* world = nullptr;
