@@ -13,6 +13,8 @@
 
 static constexpr int windowWidth = 800;
 static constexpr int windowHeight = 600;
+static const std::string versionString = "1.0";
+static const std::string windowTitle = "Tag v" + versionString;
 
 static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -46,7 +48,7 @@ int main(void)
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
     // Create a window
-    GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "Tag", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, windowTitle.c_str(), nullptr, nullptr);
     if (!window)
     {
         std::cerr << "Failed to create window\n";
