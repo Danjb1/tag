@@ -14,16 +14,17 @@
 static constexpr int windowWidth = 800;
 static constexpr int windowHeight = 600;
 
-void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     Application* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
 
     if (action == GLFW_PRESS)
     {
-        app->keyPressed(key);
+        app->keyPressed(key, mods);
     }
 }
-void windowSizeCallback(GLFWwindow* window, int width, int height)
+
+static void windowSizeCallback(GLFWwindow* window, int width, int height)
 {
     Application* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
     app->windowResized();

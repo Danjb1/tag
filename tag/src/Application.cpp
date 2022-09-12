@@ -77,57 +77,94 @@ bool Application::isRunning() const
     return !glfwWindowShouldClose(window);
 }
 
-void Application::keyPressed(int key)
+void Application::keyPressed(int key, int mods)
 {
+    // Fullscreen toggle
+    if (key == GLFW_KEY_ENTER && mods | GLFW_MOD_ALT)
+    {
+        toggleFullscreen();
+        return;
+    }
+
     // Restart
     if (key == GLFW_KEY_SPACE)
     {
         if (!playing)
         {
             restart();
+            return;
         }
     }
 
     // Player 1
-    else if (key == GLFW_KEY_UP)
+    if (key == GLFW_KEY_UP)
     {
         world.getPlayers()[0].setDir(Direction::UP);
+        return;
     }
-    else if (key == GLFW_KEY_DOWN)
+    if (key == GLFW_KEY_DOWN)
     {
         world.getPlayers()[0].setDir(Direction::DOWN);
+        return;
     }
-    else if (key == GLFW_KEY_LEFT)
+    if (key == GLFW_KEY_LEFT)
     {
         world.getPlayers()[0].setDir(Direction::LEFT);
+        return;
     }
-    else if (key == GLFW_KEY_RIGHT)
+    if (key == GLFW_KEY_RIGHT)
     {
         world.getPlayers()[0].setDir(Direction::RIGHT);
+        return;
     }
 
     // Player 2
-    else if (key == GLFW_KEY_W)
+    if (key == GLFW_KEY_W)
     {
         world.getPlayers()[1].setDir(Direction::UP);
+        return;
     }
-    else if (key == GLFW_KEY_S)
+    if (key == GLFW_KEY_S)
     {
         world.getPlayers()[1].setDir(Direction::DOWN);
+        return;
     }
-    else if (key == GLFW_KEY_A)
+    if (key == GLFW_KEY_A)
     {
         world.getPlayers()[1].setDir(Direction::LEFT);
+        return;
     }
-    else if (key == GLFW_KEY_D)
+    if (key == GLFW_KEY_D)
     {
         world.getPlayers()[1].setDir(Direction::RIGHT);
+        return;
     }
 }
 
 void Application::windowResized()
 {
     renderer.updateViewport(window);
+}
+
+void Application::toggleFullscreen()
+{
+    bool wasFullscreen = windowProps.fullscreen;
+    windowProps.fullscreen = !windowProps.fullscreen;
+
+    if (wasFullscreen)
+    {
+        // Exit fullscreen - restore previous window settings
+        glfwSetWindowMonitor(window, nullptr, windowProps.x, windowProps.y, windowProps.width, windowProps.height, 0);
+    }
+    else
+    {
+        // Enter fullscreen - remember current window settings
+        GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+        const GLFWvidmode* vidMode = glfwGetVideoMode(monitor);
+        glfwGetWindowSize(window, &windowProps.width, &windowProps.height);
+        glfwGetWindowPos(window, &windowProps.x, &windowProps.y);
+        glfwSetWindowMonitor(window, monitor, 0, 0, vidMode->width, vidMode->height, vidMode->refreshRate);
+    }
 }
 
 void Application::restart()

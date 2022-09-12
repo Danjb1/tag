@@ -9,6 +9,15 @@
 
 struct GLFWwindow;
 
+struct WindowProperties
+{
+    int x = -1;
+    int y = -1;
+    int width = -1;
+    int height = -1;
+    bool fullscreen = false;
+};
+
 class Application
 {
 public:
@@ -17,10 +26,11 @@ public:
     bool isRunning() const;
     void tick();
     void render();
-    void keyPressed(int key);
+    void keyPressed(int key, int mods);
     void windowResized();
 
 private:
+    void toggleFullscreen();
     void restart();
     void tag(Player& a, Player& b);
 
@@ -29,6 +39,7 @@ private:
     static constexpr float borderThickness = 0.15f;
 
     GLFWwindow* window;
+    WindowProperties windowProps;
 
     World world;
     GameRenderer renderer;
