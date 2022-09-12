@@ -120,12 +120,13 @@ Rect GameRenderer::makeScoreRect(const Player& player) const
     float playerRatio = static_cast<float>(index) / numPlayers;
 
     // Size
-    float maxWidth = (world->getSize().x / numPlayers);
-    float width = maxWidth * player.getTimeRemainingRatio() - scorePadding;
+    float widthPerPlayer = (world->getSize().x / numPlayers);
+    float maxWidth = widthPerPlayer - scorePadding;
+    float width = maxWidth * player.getTimeRemainingRatio();
     glm::vec2 extents = { width / 2.f, scoreHeight / 2.f };
 
     // Position
-    float x = -world->getExtents().x + (playerRatio * world->getSize().x) + (maxWidth / 2.f);
+    float x = -world->getExtents().x + (playerRatio * world->getSize().x) + (widthPerPlayer / 2.f);
     float y = -world->getExtents().y;
     glm::vec2 pos = glm::vec2(x, y) + scoreOffset;
 
