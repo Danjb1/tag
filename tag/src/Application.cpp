@@ -86,14 +86,18 @@ void Application::keyPressed(int key, int mods)
         return;
     }
 
+    // Fullscreen emergency exit
+    if (key == GLFW_KEY_ESCAPE && windowProps.fullscreen)
+    {
+        toggleFullscreen();
+        return;
+    }
+
     // Restart
     if (key == GLFW_KEY_SPACE)
     {
-        if (!playing)
-        {
-            restart();
-            return;
-        }
+        restart();
+        return;
     }
 
     // Player 1
