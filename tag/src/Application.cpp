@@ -12,10 +12,9 @@
 
 Application::Application(GLFWwindow* window)
     : window(window)
-    , world(worldSize)
-    , renderer(window, &world, borderThickness)
+    , world(worldSize, defaultNumPlayers)
+    , renderer(window, &world)
 {
-    restart();
 }
 
 void Application::tick()
@@ -100,6 +99,23 @@ void Application::keyPressed(int key, int mods)
         return;
     }
 
+    // Add / remove players
+    if (key == GLFW_KEY_F2)
+    {
+        world.reset(2);
+        return;
+    }
+    if (key == GLFW_KEY_F3)
+    {
+        world.reset(3);
+        return;
+    }
+    if (key == GLFW_KEY_F4)
+    {
+        world.reset(4);
+        return;
+    }
+
     // Player 1
     if (key == GLFW_KEY_UP)
     {
@@ -141,6 +157,50 @@ void Application::keyPressed(int key, int mods)
     if (key == GLFW_KEY_D)
     {
         world.getPlayers()[1].setDir(Direction::RIGHT);
+        return;
+    }
+
+    // Player 3
+    if (key == GLFW_KEY_KP_8)
+    {
+        world.getPlayers()[2].setDir(Direction::UP);
+        return;
+    }
+    if (key == GLFW_KEY_KP_5)
+    {
+        world.getPlayers()[2].setDir(Direction::DOWN);
+        return;
+    }
+    if (key == GLFW_KEY_KP_4)
+    {
+        world.getPlayers()[2].setDir(Direction::LEFT);
+        return;
+    }
+    if (key == GLFW_KEY_KP_6)
+    {
+        world.getPlayers()[2].setDir(Direction::RIGHT);
+        return;
+    }
+
+    // Player 4
+    if (key == GLFW_KEY_I)
+    {
+        world.getPlayers()[3].setDir(Direction::UP);
+        return;
+    }
+    if (key == GLFW_KEY_K)
+    {
+        world.getPlayers()[3].setDir(Direction::DOWN);
+        return;
+    }
+    if (key == GLFW_KEY_J)
+    {
+        world.getPlayers()[3].setDir(Direction::LEFT);
+        return;
+    }
+    if (key == GLFW_KEY_L)
+    {
+        world.getPlayers()[3].setDir(Direction::RIGHT);
         return;
     }
 }

@@ -10,7 +10,7 @@
 #include "Player.h"
 #include "Shaders.h"
 
-GameRenderer::GameRenderer(GLFWwindow* window, World* world, float borderThickness)
+GameRenderer::GameRenderer(GLFWwindow* window, World* world)
     : world(world)
 {
     // Calculate border Rects

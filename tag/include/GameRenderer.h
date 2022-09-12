@@ -13,7 +13,7 @@ struct GLFWwindow;
 class GameRenderer
 {
 public:
-    GameRenderer(GLFWwindow* window, World* world, float borderThickness);
+    GameRenderer(GLFWwindow* window, World* world);
     void updateViewport(GLFWwindow* window);
     void render();
 
@@ -63,6 +63,11 @@ private:
      * Position of the camera in the world.
      */
     static constexpr glm::vec3 cameraPos = glm::vec3(0.f, 0.f, -1.f) + cameraOffset;
+
+    /**
+     * Thickness of the border, in world units.
+     */
+    static constexpr float borderThickness = 0.15f;
 
     /**
      * Padding to add around the game border during rendering.

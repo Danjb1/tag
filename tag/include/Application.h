@@ -36,7 +36,7 @@ private:
 
 private:
     static constexpr glm::vec2 worldSize { 24.f, 18.f };
-    static constexpr float borderThickness = 0.15f;
+    static constexpr int defaultNumPlayers = 2;
 
     GLFWwindow* window;
     WindowProperties windowProps;

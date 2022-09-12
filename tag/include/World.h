@@ -11,7 +11,7 @@
 class World
 {
 public:
-    World(glm::vec2 size);
+    World(glm::vec2 size, int numPlayers);
 
     glm::vec2 keepInBounds(const glm::vec2& objPos, const glm::vec2& objExtents) const;
 
@@ -43,6 +43,7 @@ public:
     }
 
     void reset();
+    void reset(int numPlayers);
 
 public:
     static constexpr int maxPlayers = 4;
