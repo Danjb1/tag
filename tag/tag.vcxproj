@@ -146,6 +146,7 @@
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Rect.cpp" />
     <ClCompile Include="src\Shaders.cpp" />
+    <ClCompile Include="src\TimeUtils.cpp" />
     <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <ItemGroup>

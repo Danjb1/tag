@@ -2,10 +2,7 @@
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
 
-#include <algorithm>
-#include <chrono>
 #include <iostream>
-#include <thread>
 
 #include "Application.h"
 #include "Shaders.h"
@@ -129,15 +126,9 @@ int main(void)
         }
         else
         {
-            // If there is still a while to wait, let's sleep to save CPU
-            double sleepTime = TimeUtils::frameTime - deltaTime;
-            if (sleepTime > TimeUtils::maxWaitTime)
-            {
-                // A zero sleep time seems the most reliable way to get a consistent framerate, however it can result
-                // in high CPU usage. Using a non-zero value here can cause frame drops since the OS makes no guarantees
-                // about the sleep duration.
-                std::this_thread::sleep_for(std::chrono::milliseconds(0));
-            }
+            // Wait until the next update is due
+            float timeUntilNextTick = TimeUtils::frameTime - deltaTime;
+            TimeUtils::wait(timeUntilNextTick);
         }
     }
 
