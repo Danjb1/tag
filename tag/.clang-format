@@ -52,26 +52,31 @@ IncludeBlocks: Regroup
 # - Adjacent includes with the same Priority are then grouped
 # - The header file directly corresponding to a .cpp file gets Priority 0
 IncludeCategories:
+  # Windows
+  - Regex:           '^<windows\.h>'
+    Priority:        1
+    SortPriority:    10
+    CaseSensitive:   true
   # Libraries
   ## GLEW (must come before GL!)
   - Regex:           '^<GL\/glew\.h>'
     Priority:        1
-    SortPriority:    10
+    SortPriority:    20
     CaseSensitive:   true
   ## GL
   - Regex:           '^<GL\/.*\.h>'
     Priority:        1
-    SortPriority:    11
+    SortPriority:    21
     CaseSensitive:   true
   ## GLFW
   - Regex:           '^<GLFW\/.*\.h>'
     Priority:        1
-    SortPriority:    12
+    SortPriority:    22
     CaseSensitive:   true
   ## GLM
   - Regex:           '^<glm\/.*\.hpp>'
     Priority:        1
-    SortPriority:    13
+    SortPriority:    23
     CaseSensitive:   true
   # C system headers
   - Regex:           '^<.+\.h>'

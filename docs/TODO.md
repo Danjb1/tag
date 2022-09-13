@@ -2,8 +2,6 @@
 
 ## Features
 
-- Add library licenses to release
-- Improve sleep mechanism
 - Option to toggle vsync
 - Online play
 - Trails
@@ -12,3 +10,8 @@
 - AI
 - Steam support
 - Configurable controls
+
+## Tech Debt
+
+- Add library licenses to release
+- Add Unix sleep functions

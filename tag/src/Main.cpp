@@ -92,6 +92,9 @@ int main(void)
     Application app(window);
     glfwSetWindowUserPointer(window, &app);
 
+    // Create a high-precision timer
+    TimeUtils::PrecisionTimer timer;
+
     // Start the application
     double lastUpdateTime = glfwGetTime();
     while (app.isRunning())
@@ -128,7 +131,7 @@ int main(void)
         {
             // Wait until the next update is due
             float timeUntilNextTick = TimeUtils::frameTime - deltaTime;
-            TimeUtils::wait(timeUntilNextTick);
+            timer.wait(timeUntilNextTick);
         }
     }
 
