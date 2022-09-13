@@ -26,6 +26,8 @@ public:
     void tick();
     void endTick();
 
+    glm::vec2 calculatePositionDelta(float delta) const;
+
     void setDir(Direction newDir);
     void setPos(const glm::vec2& newPos);
     void resetSpeed();

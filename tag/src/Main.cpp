@@ -15,6 +15,7 @@ static constexpr int windowWidth = 800;
 static constexpr int windowHeight = 600;
 static const std::string versionString = "1.0.0";
 static const std::string windowTitle = "Tag v" + versionString;
+static constexpr bool vsync = true;
 
 static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -88,7 +89,7 @@ int main(void)
     Shaders::initializeShaders();
 
     // Enable vsync
-    glfwSwapInterval(1);
+    glfwSwapInterval(vsync ? 1 : 0);
 
     // Create the application and store a pointer to it in GLFW
     Application app(window);
@@ -123,17 +124,19 @@ int main(void)
             // Render
             app.render();
 
-            // This blocks until the next screen refresh
+            // If vsync is enabled, this blocks until the next screen refresh
             glfwSwapBuffers(window);
         }
         else
         {
-            // If there is still a while to wait, let's sleep to save CPU.
-            // In practice this never seems to happen, at least on a 60fps display.
-            double sleepTime = deltaTime - TimeUtils::frameTime;
-            if (sleepTime >= TimeUtils::minSleepTime)
+            // If there is still a while to wait, let's sleep to save CPU
+            double sleepTime = TimeUtils::frameTime - deltaTime;
+            if (sleepTime > TimeUtils::maxWaitTime)
             {
-                std::this_thread::sleep_for(std::chrono::milliseconds(TimeUtils::minSleepTime));
+                // A zero sleep time seems the most reliable way to get a consistent framerate, however it can result
+                // in high CPU usage. Using a non-zero value here can cause frame drops since the OS makes no guarantees
+                // about the sleep duration.
+                std::this_thread::sleep_for(std::chrono::milliseconds(0));
             }
         }
     }

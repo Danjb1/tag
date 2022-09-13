@@ -8,6 +8,11 @@ Rect::Rect(glm::vec2 pos, glm::vec2 extents)
 {
 }
 
+Rect Rect::operator+(const glm::vec2& offset) const
+{
+    return { pos + offset, extents };
+}
+
 bool Rect::intersects(Rect other) const
 {
     // See: https://stackoverflow.com/a/306332/1624459

@@ -15,7 +15,8 @@ Player::Player(int playerId, World* world, glm::vec2 pos, Color col)
 
 void Player::tick()
 {
-    setPos(rect.pos + dirVector * speed * TimeUtils::frameTime);
+    glm::vec2 positionDelta = calculatePositionDelta(TimeUtils::frameTime);
+    setPos(rect.pos + positionDelta);
 
     Player* taggedPlayer = world->getTaggedPlayer();
     if (!taggedPlayer)
@@ -40,6 +41,11 @@ void Player::endTick()
 {
     intersectingPlayersLastFrame = intersectingPlayers;
     intersectingPlayers.clear();
+}
+
+glm::vec2 Player::calculatePositionDelta(float delta) const
+{
+    return dirVector * speed * delta;
 }
 
 void Player::setDir(Direction newDir)
