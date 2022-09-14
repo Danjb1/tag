@@ -2,9 +2,18 @@
 
 ## Features
 
-- Option to toggle vsync
+- Command-line options
+    - fullscreen
+    - novsync
+    - numPlayers=2/3/4
+    - fps=60/120/...
+    - winTime=...
+- VFX
+    - Tagged player pulse
+    - Winner celebration
+    - Border flash / shake when tagging
+    - Player trails
 - Online play
-- Trails
 - Power-ups
 - Gamepad support
 - AI
@@ -13,5 +22,5 @@
 
 ## Tech Debt
 
-- Add library licenses to release
+- Write readme
 - Add Unix sleep functions
