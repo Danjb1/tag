@@ -21,22 +21,22 @@ struct WindowProperties
 class Application
 {
 public:
-    Application(GLFWwindow* window);
+    Application(GLFWwindow* window, int numPlayers);
 
+    void run();
     bool isRunning() const;
     void tick();
     void render();
     void keyPressed(int key, int mods);
     void windowResized();
+    void toggleFullscreen();
 
 private:
-    void toggleFullscreen();
     void restart();
     void tag(Player& a, Player& b);
 
 private:
     static constexpr glm::vec2 worldSize { 24.f, 18.f };
-    static constexpr int defaultNumPlayers = 2;
 
     GLFWwindow* window;
     WindowProperties windowProps;

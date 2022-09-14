@@ -46,6 +46,7 @@ public:
     void reset(int numPlayers);
 
 public:
+    static constexpr int minPlayers = 2;
     static constexpr int maxPlayers = 4;
 
 private:

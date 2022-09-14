@@ -9,12 +9,63 @@
 #include <vector>
 
 #include "Rect.h"
+#include "TimeUtils.h"
 
-Application::Application(GLFWwindow* window)
+Application::Application(GLFWwindow* window, int numPlayers)
     : window(window)
-    , world(worldSize, defaultNumPlayers)
+    , world(worldSize, numPlayers)
     , renderer(window, &world)
 {
+}
+
+void Application::run()
+{
+    // Create a high-precision timer
+    TimeUtils::PrecisionTimer timer;
+
+    // Start the application
+    double lastUpdateTime = glfwGetTime();
+    while (isRunning())
+    {
+        // Measure time
+        double nowTime = glfwGetTime();
+        float deltaTime = static_cast<float>(nowTime - lastUpdateTime);
+
+        // Is an update due?
+        if (deltaTime > TimeUtils::frameTime)
+        {
+            lastUpdateTime = nowTime;
+            int numUpdatesPerformed = 0;
+
+            // Process GLFW event queue
+            glfwPollEvents();
+
+            // Update according to our desired FPS.
+            // This may update more than once if we are falling behind.
+            while (deltaTime > TimeUtils::frameTime && numUpdatesPerformed < TimeUtils::maxUpdatesPerRender)
+            {
+                tick();
+                deltaTime -= TimeUtils::frameTime;
+                ++numUpdatesPerformed;
+            }
+
+            render();
+
+            // If vsync is enabled, this blocks until the next screen refresh
+            glfwSwapBuffers(window);
+        }
+        else
+        {
+            // Wait until the next update is due
+            float timeUntilNextTick = TimeUtils::frameTime - deltaTime;
+            timer.wait(timeUntilNextTick);
+        }
+    }
+}
+
+bool Application::isRunning() const
+{
+    return !glfwWindowShouldClose(window);
 }
 
 void Application::tick()
@@ -69,11 +120,6 @@ void Application::tick()
 void Application::render()
 {
     renderer.render();
-}
-
-bool Application::isRunning() const
-{
-    return !glfwWindowShouldClose(window);
 }
 
 void Application::keyPressed(int key, int mods)
