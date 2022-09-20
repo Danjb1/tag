@@ -57,6 +57,10 @@ IncludeCategories:
     Priority:        1
     SortPriority:    10
     CaseSensitive:   true
+  - Regex:           '^<winsock2\.h>'
+    Priority:        1
+    SortPriority:    11
+    CaseSensitive:   true
   # Libraries
   ## GLEW (must come before GL!)
   - Regex:           '^<GL\/glew\.h>'

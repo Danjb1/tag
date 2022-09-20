@@ -148,8 +148,10 @@
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\MathUtils.cpp" />
     <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\ProgramOptions.cpp" />
     <ClCompile Include="src\Rect.cpp" />
     <ClCompile Include="src\Shaders.cpp" />
+    <ClCompile Include="src\Socket.cpp" />
     <ClCompile Include="src\TimeUtils.cpp" />
     <ClCompile Include="src\World.cpp" />
   </ItemGroup>
@@ -158,10 +160,12 @@
     <ClInclude Include="include\BoxRenderable.h" />
     <ClInclude Include="include\Color.h" />
     <ClInclude Include="include\GameRenderer.h" />
+    <ClInclude Include="include\ProgramOptions.h" />
     <ClInclude Include="include\Shaders.h" />
     <ClInclude Include="include\MathUtils.h" />
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\Rect.h" />
+    <ClInclude Include="include\Socket.h" />
     <ClInclude Include="include\TimeUtils.h" />
     <ClInclude Include="include\World.h" />
   </ItemGroup>

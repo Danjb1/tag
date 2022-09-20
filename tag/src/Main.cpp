@@ -1,3 +1,20 @@
+////////////////////////////////////////////////////////////////////////////////
+// Windows
+////////////////////////////////////////////////////////////////////////////////
+
+// <windows.h> needs to be included before GLFW otherwise it causes errors.
+// For safety we always include this at the very start of the program.
+#ifdef _WIN32
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <windows.h>
+#endif  // _WIN32
+
+////////////////////////////////////////////////////////////////////////////////
+// Common
+////////////////////////////////////////////////////////////////////////////////
+
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
@@ -5,16 +22,15 @@
 #include <iostream>
 
 #include "Application.h"
+#include "ProgramOptions.h"
 #include "Shaders.h"
+#include "Socket.h"
 #include "World.h"
 
 static constexpr int windowWidth = 800;
 static constexpr int windowHeight = 600;
 static const std::string versionString = "1.0.0";
 static const std::string windowTitle = "Tag v" + versionString;
-static bool fullscreenEnabled = false;
-static bool vsyncEnabled = true;
-static int numPlayers = 2;
 
 static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -35,49 +51,31 @@ static void windowSizeCallback(GLFWwindow* window, int width, int height)
 int main(int argc, char* argv[])
 {
     // Parse command-line parameters
-    for (int i = 1; i < argc; ++i)
+    ProgramOptions options(argc, argv);
+    if (options.hasError())
     {
-        std::string arg = argv[i];
+        std::cerr << options.getError() << "\n";
+        return -1;
+    }
 
-        if (arg == "-novsync")
+    // Initialize networking
+    if (options.isNetworked() && !NetUtils::init())
+    {
+        std::cerr << "Networking not supported by the OS\n";
+        return -1;
+    }
+
+    // Host
+    if (options.isHost())
+    {
+        try
         {
-            vsyncEnabled = false;
+            // Start listening on an arbitrary port
+            DatagramSocket sock(25565);
         }
-        else if (arg == "-fullscreen")
+        catch (const std::runtime_error& e)
         {
-            fullscreenEnabled = true;
-        }
-        else if (arg == "-numPlayers")
-        {
-            if (i + 1 >= argc)
-            {
-                std::cerr << "No value supplied for numPlayers\n";
-                std::cerr << "Expected: -numPlayers [n]\n";
-                return -1;
-            }
-            try
-            {
-                numPlayers = std::stoi(argv[i + 1]);
-                if (numPlayers < World::minPlayers || numPlayers > World::maxPlayers)
-                {
-                    throw std::out_of_range("numPlayers out of range");
-                }
-            }
-            catch (const std::invalid_argument&)
-            {
-                std::cerr << "Invalid value supplied for numPlayers\n";
-                return -1;
-            }
-            catch (const std::out_of_range&)
-            {
-                std::cerr << "numPlayers must be between " << World::minPlayers << " and " << World::maxPlayers << "\n";
-                return -1;
-            }
-            ++i;  // Skip next argument
-        }
-        else
-        {
-            std::cerr << "Invalid argument: " << arg << "\n";
+            std::cerr << e.what() << "\n ";
             return -1;
         }
     }
@@ -136,17 +134,17 @@ int main(int argc, char* argv[])
     Shaders::initializeShaders();
 
     // Enable vsync
-    glfwSwapInterval(vsyncEnabled ? 1 : 0);
+    glfwSwapInterval(options.isVsyncEnabled() ? 1 : 0);
 
     // Create the application and store a pointer to it in GLFW
-    Application app(window, numPlayers);
+    Application app(window, options.getNumPlayers());
     glfwSetWindowUserPointer(window, &app);
 
     // Make the window visible
     glfwShowWindow(window);
 
     // Toggle fullscreen immediately if requested
-    if (fullscreenEnabled)
+    if (options.isFullscreenEnabled())
     {
         app.toggleFullscreen();
     }
