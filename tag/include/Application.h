@@ -1,5 +1,6 @@
 #pragma once
 
+#include <enet.h>
 #include <glm/mat4x4.hpp>
 #include <glm/vec2.hpp>
 
@@ -21,7 +22,7 @@ struct WindowProperties
 class Application
 {
 public:
-    Application(GLFWwindow* window, int numPlayers);
+    Application(GLFWwindow* window, int numPlayers, ENetHost* connection);
 
     void run();
     bool isRunning() const;
@@ -40,6 +41,8 @@ private:
 
     GLFWwindow* window;
     WindowProperties windowProps;
+
+    ENetHost* connection;
 
     World world;
     GameRenderer renderer;

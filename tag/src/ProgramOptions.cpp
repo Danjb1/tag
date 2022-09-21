@@ -4,6 +4,8 @@
 
 #include "World.h"
 
+static constexpr int maxPort = 65535;
+
 ProgramOptions::ProgramOptions(int argc, char* argv[])
 {
     error = parseArgs(argc, argv);
@@ -58,6 +60,20 @@ const std::string ProgramOptions::parseArgs(int argc, char* argv[])
             catch (const std::runtime_error& e)
             {
                 return std::string(e.what()) + "\nExpected: -connect [hostAddress]";
+            }
+        }
+
+        // host
+        else if (arg == "-port")
+        {
+            try
+            {
+                port = parseInt(argc, argv, i + 1, 0, maxPort);
+                ++i;  // Skip next argument
+            }
+            catch (const std::runtime_error& e)
+            {
+                return std::string(e.what()) + "\nExpected: -port [port]";
             }
         }
 

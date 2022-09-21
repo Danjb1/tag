@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
         // Find the localhost address on the desired port
         ENetAddress address = { 0 };
         address.host = ENET_HOST_ANY;
-        address.port = 7777;
+        address.port = options.getPort();
 
         // Create server
         int maxClients = options.getNumPlayers() - 1;
@@ -72,6 +72,7 @@ int main(int argc, char* argv[])
     }
     else if (options.isClient())
     {
+        // Create the client connection
         connection = enet_host_create(
                 NULL,  // Create a client
                 1,     // Only allow 1 outgoing connection
@@ -82,6 +83,30 @@ int main(int argc, char* argv[])
         if (!connection)
         {
             std::cerr << "Failed to create net client\n";
+            return -1;
+        }
+
+        // Connect to the server
+        ENetAddress address;
+        ENetEvent event;
+        ENetPeer* peer;
+        enet_address_set_host(&address, options.getHostAddress().c_str());
+        address.port = options.getPort();
+
+        // Initiate the connection, allocating the two channels 0 and 1
+        peer = enet_host_connect(connection, &address, 2, 0);
+        if (!peer)
+        {
+            std::cerr << "Failed to initiate client connection\n";
+            return -1;
+        }
+
+        // Wait up to 5 seconds for the connection attempt to succeed
+        if (enet_host_service(connection, &event, 5000) > 0 && event.type != ENET_EVENT_TYPE_CONNECT)
+        {
+            // Connection timed out or a disconnect event was received
+            enet_peer_reset(peer);
+            std::cerr << "Failed to connect to server\n";
             return -1;
         }
     }
@@ -143,7 +168,7 @@ int main(int argc, char* argv[])
     glfwSwapInterval(options.isVsyncEnabled() ? 1 : 0);
 
     // Create the application and store a pointer to it in GLFW
-    Application app(window, options.getNumPlayers());
+    Application app(window, options.getNumPlayers(), connection);
     glfwSetWindowUserPointer(window, &app);
 
     // Make the window visible

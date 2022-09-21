@@ -49,6 +49,11 @@ public:
         return hostAddress;
     }
 
+    int getPort() const
+    {
+        return port;
+    }
+
 private:
     const std::string parseArgs(int argc, char* argv[]);
     int parseInt(int argc, char* argv[], int index, int min, int max) const;
@@ -63,4 +68,5 @@ private:
     int numPlayers = 2;
     bool host = false;
     std::string hostAddress;
+    int port = 25565;
 };

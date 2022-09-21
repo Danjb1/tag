@@ -1,7 +1,6 @@
 #include "Application.h"
 
 #include <GLFW/glfw3.h>
-#include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
 
 #include <iostream>
@@ -11,8 +10,9 @@
 #include "Rect.h"
 #include "TimeUtils.h"
 
-Application::Application(GLFWwindow* window, int numPlayers)
+Application::Application(GLFWwindow* window, int numPlayers, ENetHost* connection)
     : window(window)
+    , connection(connection)
     , world(worldSize, numPlayers)
     , renderer(window, &world)
 {
