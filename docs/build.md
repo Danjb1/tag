@@ -8,6 +8,14 @@ Why? Partly for the challenge, and partly to show that applications can still be
 
 ## Dependencies
 
+### ENet
+
+**Required for networking.**
+
+This is distributed as a header-only library, so including it is trivial.
+
+More information [here](https://github.com/zpl-c/enet#installation).
+
 ### GLEW
 
 **Required for OpenGL support.**
@@ -35,6 +43,6 @@ Finally, click "Generate" to create the Visual Studio project that can build the
 
 **Required for matrix and vector operations.**
 
-This is distributed as a header-only library, so including it is straightforward.
+This is distributed as a header-only library, so including it is trivial.
 
 More information [here](https://github.com/g-truc/glm/blob/master/manual.md#-11-using-global-headers).

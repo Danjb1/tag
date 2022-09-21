@@ -62,25 +62,30 @@ IncludeCategories:
     SortPriority:    11
     CaseSensitive:   true
   # Libraries
+  ## Enet (must come before GL!)
+  - Regex:           '^<enet\.h>'
+    Priority:        1
+    SortPriority:    20
+    CaseSensitive:   true
   ## GLEW (must come before GL!)
   - Regex:           '^<GL\/glew\.h>'
     Priority:        1
-    SortPriority:    20
+    SortPriority:    21
     CaseSensitive:   true
   ## GL
   - Regex:           '^<GL\/.*\.h>'
     Priority:        1
-    SortPriority:    21
+    SortPriority:    22
     CaseSensitive:   true
   ## GLFW
   - Regex:           '^<GLFW\/.*\.h>'
     Priority:        1
-    SortPriority:    22
+    SortPriority:    23
     CaseSensitive:   true
   ## GLM
   - Regex:           '^<glm\/.*\.hpp>'
     Priority:        1
-    SortPriority:    23
+    SortPriority:    24
     CaseSensitive:   true
   # C system headers
   - Regex:           '^<.+\.h>'

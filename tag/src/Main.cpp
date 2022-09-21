@@ -1,30 +1,17 @@
-////////////////////////////////////////////////////////////////////////////////
-// Windows
-////////////////////////////////////////////////////////////////////////////////
-
-// <windows.h> needs to be included before GLFW otherwise it causes errors.
-// For safety we always include this at the very start of the program.
-#ifdef _WIN32
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-#include <windows.h>
-#endif  // _WIN32
-
-////////////////////////////////////////////////////////////////////////////////
-// Common
-////////////////////////////////////////////////////////////////////////////////
-
+#define ENET_IMPLEMENTATION
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#include <enet.h>
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
+
+#include <stdio.h>
 
 #include <iostream>
 
 #include "Application.h"
 #include "ProgramOptions.h"
 #include "Shaders.h"
-#include "Socket.h"
 #include "World.h"
 
 static constexpr int windowWidth = 800;
@@ -59,23 +46,42 @@ int main(int argc, char* argv[])
     }
 
     // Initialize networking
-    if (options.isNetworked() && !NetUtils::init())
+    if (options.isNetworked() && enet_initialize() != 0)
     {
-        std::cerr << "Networking not supported by the OS\n";
+        std::cerr << "Failed to initialize networking library\n";
         return -1;
     }
 
-    // Host
+    // Initialize network connection
+    ENetHost* connection = nullptr;
     if (options.isHost())
     {
-        try
+        // Find the localhost address on the desired port
+        ENetAddress address = { 0 };
+        address.host = ENET_HOST_ANY;
+        address.port = 7777;
+
+        // Create server
+        int maxClients = options.getNumPlayers() - 1;
+        connection = enet_host_create(&address, maxClients, 2, 0, 0);
+        if (!connection)
         {
-            // Start listening on an arbitrary port
-            DatagramSocket sock(25565);
+            std::cerr << "Failed to create server\n";
+            return -1;
         }
-        catch (const std::runtime_error& e)
+    }
+    else if (options.isClient())
+    {
+        connection = enet_host_create(
+                NULL,  // Create a client
+                1,     // Only allow 1 outgoing connection
+                2,     // Allow up 2 channels to be used, 0 and 1
+                0,     // Assume any amount of incoming bandwidth
+                0      // Assume any amount of outgoing bandwidth
+        );
+        if (!connection)
         {
-            std::cerr << e.what() << "\n ";
+            std::cerr << "Failed to create net client\n";
             return -1;
         }
     }
@@ -154,6 +160,8 @@ int main(int argc, char* argv[])
 
     // Exit cleanly
     glfwTerminate();
+    enet_host_destroy(connection);
+    enet_deinitialize();
 
     return 0;
 }

@@ -18,4 +18,6 @@
 ## Tech Debt
 
 - Create a window class to hold the window properties, etc.
-- Add Unix sleep functions
+- Create a utility header for common include patterns (e.g. <windows.h>)
+- Cross-platform support (TimeUtils, Socket)
+    - Consider moving OS-specific logic into separate files
