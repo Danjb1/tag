@@ -1,0 +1,3 @@
+# Binaries
+dist/*.exe
+dist/*.zip
