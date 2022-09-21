@@ -3,7 +3,6 @@
 ## WIP
 
 - Basic networking
-    - Create a script to automatically start a host and client
     - Disconnect clients when exiting the application
     - Call enet_host_service at the start of the game loop
         - See: http://enet.bespin.org/Tutorial.html
