@@ -17,7 +17,7 @@
 static constexpr int windowWidth = 800;
 static constexpr int windowHeight = 600;
 static const std::string versionString = "1.0.0";
-static const std::string windowTitle = "Tag v" + versionString;
+static const std::string defaultWindowTitle = "Tag v" + versionString;
 
 static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -63,22 +63,30 @@ int main(int argc, char* argv[])
 
         // Create server
         int maxClients = options.getNumPlayers() - 1;
-        connection = enet_host_create(&address, maxClients, 2, 0, 0);
+        connection = enet_host_create(
+                &address,
+                maxClients,  // Allow 1 outgoing connection per client
+                2,           // Allow up to 2 channels to be used, 0 and 1
+                0,           // Assume any amount of incoming bandwidth
+                0            // Assume any amount of outgoing bandwidth
+        );
         if (!connection)
         {
             std::cerr << "Failed to create server\n";
             return -1;
         }
+
+        std::cout << "Listening on port: " << address.port << "\n";
     }
     else if (options.isClient())
     {
         // Create the client connection
         connection = enet_host_create(
-                NULL,  // Create a client
-                1,     // Only allow 1 outgoing connection
-                2,     // Allow up 2 channels to be used, 0 and 1
-                0,     // Assume any amount of incoming bandwidth
-                0      // Assume any amount of outgoing bandwidth
+                nullptr,  // Create a client
+                1,        // Only allow 1 outgoing connection
+                2,        // Allow up 2 channels to be used, 0 and 1
+                0,        // Assume any amount of incoming bandwidth
+                0         // Assume any amount of outgoing bandwidth
         );
         if (!connection)
         {
@@ -87,13 +95,12 @@ int main(int argc, char* argv[])
         }
 
         // Connect to the server
-        ENetAddress address;
-        ENetEvent event;
+        ENetAddress address = { 0 };
         ENetPeer* peer;
         enet_address_set_host(&address, options.getHostAddress().c_str());
         address.port = options.getPort();
 
-        // Initiate the connection, allocating the two channels 0 and 1
+        // Attempt the connection, allocating the two channels 0 and 1
         peer = enet_host_connect(connection, &address, 2, 0);
         if (!peer)
         {
@@ -101,14 +108,7 @@ int main(int argc, char* argv[])
             return -1;
         }
 
-        // Wait up to 5 seconds for the connection attempt to succeed
-        if (enet_host_service(connection, &event, 5000) > 0 && event.type != ENET_EVENT_TYPE_CONNECT)
-        {
-            // Connection timed out or a disconnect event was received
-            enet_peer_reset(peer);
-            std::cerr << "Failed to connect to server\n";
-            return -1;
-        }
+        std::cout << "Connecting to " << options.getHostAddress() << ":" << address.port << "\n";
     }
 
     // Initialize GLFW
@@ -125,6 +125,11 @@ int main(int argc, char* argv[])
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
     // Create a window
+    std::string windowTitle = defaultWindowTitle;
+    if (options.isHost())
+    {
+        windowTitle += " [host]";
+    }
     GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, windowTitle.c_str(), nullptr, nullptr);
     if (!window)
     {

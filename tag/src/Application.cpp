@@ -70,6 +70,46 @@ bool Application::isRunning() const
 
 void Application::tick()
 {
+    // Process any pending network events
+    if (connection)
+    {
+        ENetEvent event;
+        while (enet_host_service(connection, &event, 0) > 0)
+        {
+            switch (event.type)
+            {
+            // Connect
+            // => Server: A new client connected
+            // => Client: Connected to server was established
+            case ENET_EVENT_TYPE_CONNECT:
+            {
+                char ipAddress[INET_ADDRSTRLEN] = "(unknown)";
+                enet_address_get_host_ip(&event.peer->address, ipAddress, INET_ADDRSTRLEN);
+                std::cout << "Client connected from " << ipAddress << ":" << event.peer->address.port << "\n";
+                event.peer->data = (void*) "Client ID goes here";
+            }
+            break;
+
+            // Disconnect
+            // => Server: A client disconnected
+            // => Client: Connected to server was lost
+            case ENET_EVENT_TYPE_DISCONNECT:
+                std::cout << "Client disconnected " << event.peer->data << "\n";
+                event.peer->data = nullptr;
+                break;
+
+            // Packed received
+            case ENET_EVENT_TYPE_RECEIVE:
+                std::cout << "Received packet of length " << event.packet->dataLength  //
+                          << " containing " << event.packet->data                      //
+                          << " from " << event.peer->data                              //
+                          << " on channel " << event.channelID << "\n";
+                enet_packet_destroy(event.packet);
+                break;
+            }
+        }
+    }
+
     if (!playing)
     {
         return;

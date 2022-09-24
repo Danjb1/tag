@@ -1,6 +1,7 @@
 # Visual Studio preferences
 /.vs/
 *.vcxproj.user
+*.args.json
 
 # Build output
 /x64/

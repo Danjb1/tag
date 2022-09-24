@@ -3,9 +3,6 @@
 ## WIP
 
 - Basic networking
-    - Disconnect clients when exiting the application
-    - Call enet_host_service at the start of the game loop
-        - See: http://enet.bespin.org/Tutorial.html
     - Game should not start until all players have joined
     - Host should accept client connections and assign them player numbers
     - Prevent moving other players
